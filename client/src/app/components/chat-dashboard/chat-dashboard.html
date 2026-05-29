@@ -1,0 +1,177 @@
+<p-confirmDialog></p-confirmDialog>
+<div class="flex h-screen w-full overflow-hidden bg-[#f0f2f5]">
+  <div class="w-[350px] shrink-0 bg-white border-r border-gray-200 flex flex-col h-full">
+    <div
+      class="h-[60px] bg-[#aeaeae]/10 shrink-0 flex items-center justify-between px-1 border-b border-gray-200"
+    >
+      <div class="flex items-center gap-1">
+        <div class="p-2 rounded-full bg-gray-300 flex items-center justify-between overflow-hidden">
+          {{ getInitialName(myFullName) }}
+        </div>
+        <span class="font-medium text-gray-700 text-sm">{{ myFullName }}</span>
+      </div>
+      <div class="flex gap-2">
+        <p-button
+          (click)="logout()"
+          icon="pi pi-sign-out"
+          size="small"
+          [rounded]="true"
+          [raised]="true"
+          severity="secondary"
+        ></p-button>
+        <p-button
+          (click)="openNewChatModal()"
+          icon="pi pi-plus"
+          size="small"
+          [rounded]="true"
+          [raised]="true"
+          severity="primary"
+        >
+        </p-button>
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto divide-y divide-gray-100">
+      @for (chat of myChats(); track chat.id) {
+        <div
+          (click)="selectChat(chat.id)"
+          [class.bg-emerald-300/40]="chat.id === selectedChatId"
+          class="flex items-center gap-3 p-3 hover:bg-gray-50/80 cursor-pointer transition-all duration-150 border-l-4 border-transparent"
+          [class.border-emerald-600]="chat.id === selectedChatId"
+        >
+          <div
+            class="w-11 h-11 rounded-full bg-emerald-600 text-white flex items-center justify-center font-semibold text-sm shadow-sm shrink-0"
+          >
+            {{ getChatInitials(chat) }}
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <h4 class="font-medium text-gray-800 text-sm truncate">
+                {{ getChatName(chat) }}
+                <span class="ml-1" *ngIf="chat.unReadCount > 0">
+                  <p-badge [value]="chat.unReadCount"></p-badge>
+                </span>
+              </h4>
+              <span class="text-xs text-gray-400 shrink-0">
+                {{ chat.lastMessageAt | date: 'HH:mm' }}
+              </span>
+            </div>
+            <p class="text-xs text-gray-500 truncate mt-0.5">Sohbet odası aktif</p>
+          </div>
+        </div>
+      } @empty {
+        <div class="text-center py-12 text-gray-400 text-sm">
+          <i class="pi pi-comments text-3xl mb-2 block"></i>
+          Henüz hiç sohbetiniz yok.
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="flex-1 flex flex-col h-full bg-[#efeae2] relative">
+    <ng-container *ngIf="selectedChatId; else noChatSelected">
+      <div
+        class="h-[60px] bg-[#f0f2f5] shrink-0 flex items-center px-4 border-b border-gray-200 z-10"
+      >
+        <h3 class="font-semibold text-gray-800 text-sm">
+          {{ selectedUser?.fullName }}
+        </h3>
+      </div>
+
+      <div #messageContainer class="flex-1 overflow-y-auto p-6 space-y-3 custom-chat-bg">
+        <div
+          *ngFor="let msg of messages()"
+          [ngClass]="
+            msg.senderUserId === currentUserId
+              ? 'self-end bg-[#d9fdd3] text-gray-900 ml-auto'
+              : 'self-start bg-white text-gray-900'
+          "
+          class="max-w-[65%] rounded-lg px-3 py-1.5 text-sm shadow-sm border border-black/5 block w-fit"
+        >
+          <p class="break-words">{{ msg.content }}</p>
+        </div>
+      </div>
+
+      <div
+        class="min-h-[60px] bg-[#f0f2f5] shrink-0 flex items-center gap-3 px-4 py-2 border-t border-gray-200"
+      >
+        <input
+          type="text"
+          [(ngModel)]="newMessage"
+          (keyup.enter)="sendMsg()"
+          placeholder="Bir mesaj yazın"
+          class="flex-1 bg-white rounded-lg px-4 py-2 text-sm focus:outline-none placeholder-gray-500 border border-transparent focus:border-gray-300 transition-colors mt-"
+        />
+        <p-button
+          (click)="sendMsg()"
+          icon="pi pi-send"
+          size="small"
+          [rounded]="true"
+          class="hover:bg-emerald-700 rounded-full items-center justify-center shrink-0 text-white"
+        >
+        </p-button>
+      </div>
+    </ng-container>
+
+    <ng-template #noChatSelected>
+      <div
+        class="flex-1 flex flex-col items-center justify-center bg-[#f8fafc] p-8 text-center select-none"
+      >
+        <div
+          class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 mb-4 border border-gray-200"
+        >
+          <i class="pi pi-comments text-4xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-700 mb-2">WhatsApp Web Web'e Hoş Geldiniz</h3>
+        <p class="text-gray-500 text-sm max-w-sm">
+          Mesajlaşmaya başlamak için sol panelden bir sohbet seçin veya yeni bir sohbet başlatın.
+        </p>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<p-dialog
+  header="Yeni Sohbet Başlat"
+  [(visible)]="isDialogVisible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '420px' }"
+  styleClass="custom-chat-dialog"
+>
+  <div class="flex flex-col max-h-[400px] overflow-y-auto mt-2 divide-y divide-gray-100">
+    @for (user of users; track $index) {
+      <div
+        (click)="selectUserAndStartChat(user.id)"
+        class="flex items-center gap-3 p-3 hover:bg-emerald-50/60 cursor-pointer transition-all duration-200 group rounded-lg"
+      >
+        <div
+          class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-semibold text-sm group-hover:scale-105 transition-transform shrink-0"
+        >
+          {{ user.fullName ? user.fullName.charAt(0).toUpperCase() : '?' }}
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <h4
+            class="font-medium text-gray-800 text-sm truncate group-hover:text-emerald-700 transition-colors"
+          >
+            {{ user.fullName }}
+          </h4>
+          <p class="text-xs text-gray-400 truncate">
+            {{ user.email }}
+          </p>
+        </div>
+
+        <i
+          class="pi pi-comment text-gray-300 group-hover:text-emerald-500 transition-colors text-sm pl-2"
+        ></i>
+      </div>
+    } @empty {
+      <div class="text-center py-8 text-gray-400 text-sm">
+        <i class="pi pi-users text-2xl mb-2 block"></i>
+        Kullanıcı bulunamadı.
+      </div>
+    }
+  </div>
+</p-dialog>

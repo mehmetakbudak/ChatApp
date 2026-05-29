@@ -1,0 +1,51 @@
+// PrimeNG bileşenlerinin iç yapılarına müdahale edebilmek için :host ::ng-deep kullanıyoruz
+:host ::ng-deep {
+
+  // 1. Splitter (Panel Bölücü) Çizgisi Tasarımı
+  .p-splitter {
+    background: transparent;
+
+    // Panelleri ayıran dikey çizginin stilini WhatsApp tarzı sade bir çizgiye dönüştürüyoruz
+    .p-splitter-gutter {
+      background: #e2e8f0 !important; // Slate-200 rengi
+      width: 4px !important;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #00a884 !important; // Sürüklerken WhatsApp yeşili olsun
+      }
+    }
+  }
+
+  // 2. WhatsApp Sohbet Arka Plan Deseni
+  .custom-chat-bg {
+    // PrimeNG ScrollPanel'ın gerçek içerik taşıyıcı kapsayıcısını hedefliyoruz
+    .p-scrollpanel-content {
+      background-color: #efeae2 !important;
+      // WhatsApp'ın o meşhur hafif dikey desenini simüle eden şık bir SVG arka planı
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23e5ddd5' fill-opacity='0.4'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z'/%3E%3C/g%3E%3C/svg%3E") !important;
+    }
+  }
+
+  // 3. Modern ve İnce Kaydırma Çubukları (Scrollbar)
+  .p-scrollpanel {
+    .p-scrollpanel-bar {
+      background: #cccccc !important;
+      opacity: 0.6;
+      width: 6px !important;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+// Mesaj balonlarının köşe kavislerini WhatsApp stiline eşitleyen ince dokunuşlar
+.self-end {
+  border-radius: 8px 0px 8px 8px !important; // Sağ üst köşe sivri (Giden mesaj)
+}
+
+.self-start {
+  border-radius: 0px 8px 8px 8px !important; // Sol üst köşe sivri (Gelen mesaj)
+}

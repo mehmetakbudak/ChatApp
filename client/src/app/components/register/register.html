@@ -1,0 +1,74 @@
+<!-- Ekranı tam ortalayan modern Tailwind arka plan kapsayıcısı -->
+<div class="h-screen w-screen flex justify-center items-center bg-[#f0f2f5]">
+  <!-- PrimeNG p-card bileşeni ve üst yeşil WhatsApp çizgisi -->
+  <p-card
+    header="ChatApp Kayıt Ol"
+    subheader="Aramıza katılmak için bilgilerinizi girin"
+    styleClass="w-[400px] shadow-lg border-t-8 border-[#00a884] rounded-lg"
+  >
+    <form (ngSubmit)="onRegister()" class="flex flex-col gap-4 mt-4">
+      <!-- Ad Soyad Giriş Alanı -->
+      <div class="flex flex-col gap-1">
+        <label for="fullName" class="text-sm font-semibold text-slate-600">Ad Soyad</label>
+        <input
+          pInputText
+          id="fullName"
+          type="text"
+          name="fullName"
+          [(ngModel)]="registerData.fullName"
+          placeholder="Ad Soyad giriniz"
+          class="w-full"
+        />
+      </div>
+
+      <!-- E-posta Giriş Alanı -->
+      <div class="flex flex-col gap-1">
+        <label for="email" class="text-sm font-semibold text-slate-600">E-posta Adresi</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="registerData.email"
+          placeholder="E-posta adresinizi girin"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Şifre Giriş Alanı -->
+      <div class="flex flex-col gap-1">
+        <label for="password" class="text-sm font-semibold text-slate-600">Şifre</label>
+        <input
+          pInputText
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="registerData.password"
+          placeholder="Şifrenizi girin"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Hata Mesajı Bölümü -->
+      @if (errorMessage) {
+        <p-message severity="error" [text]="errorMessage" styleClass="w-full mt-2"></p-message>
+      }
+
+      <!-- Kayıt Butonu -->
+      <button
+        pButton
+        label="Kayıt Ol"
+        type="submit"
+        class="p-button-success w-full mt-2 py-3 font-semibold bg-[#00a884] border-none hover:bg-[#008f72]"
+      ></button>
+    </form>
+
+    <!-- Giriş Yap Alt Bağlantısı -->
+    <ng-template pTemplate="footer">
+      <div class="text-center text-sm text-slate-600">
+        Zaten hesabınız var mı?
+        <a routerLink="/login" class="text-[#00a884] font-semibold hover:underline">Giriş Yapın</a>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

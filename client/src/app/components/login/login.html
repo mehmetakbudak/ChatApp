@@ -1,0 +1,59 @@
+<!-- Ekranı tam ortalayan modern Tailwind arka plan kapsayıcısı -->
+<div class="h-screen w-screen flex justify-center items-center bg-[#f0f2f5]">
+  <!-- PrimeNG p-card bileşeni ve üst yeşil WhatsApp çizgisi -->
+  <p-card
+    header="ChatApp Giriş"
+    subheader="Mesajlaşmaya başlamak için oturum açın"
+    class="w-[400px] shadow-lg border-t-8 border-[#00a884] rounded-lg"
+  >
+    <form (ngSubmit)="onLogin()" class="flex flex-col gap-4 mt-4">
+      <div class="flex flex-col gap-1">
+        <label for="email" class="text-sm font-semibold text-slate-600">E-posta Adresi</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="loginData.email"
+          placeholder="E-Posta adresinizi girin"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Şifre Giriş Alanı -->
+      <div class="flex flex-col gap-1">
+        <label for="password" class="text-sm font-semibold text-slate-600">Şifre</label>
+        <input
+          pInputText
+          id="password"
+          type="password"
+          name="password"
+          placeholder="Şifrenizi girin"
+          [(ngModel)]="loginData.password"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Hata Mesajı Bölümü -->
+      @if (errorMessage) {
+        <p-message severity="error" [text]="errorMessage" styleClass="w-full mt-2"></p-message>
+      }
+
+      <button
+        pButton
+        label="Giriş Yap"
+        type="submit"
+        class="p-button-success w-full mt-2 py-3 font-semibold bg-[#00a884] border-none hover:bg-[#008f72]"
+      ></button>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="text-center text-sm text-slate-600">
+        Hesabınız yok mu?
+        <a routerLink="/register" class="text-[#00a884] font-semibold hover:underline"
+          >Kayıt Olun</a
+        >
+      </div>
+    </ng-template>
+  </p-card>
+</div>
